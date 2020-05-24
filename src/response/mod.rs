@@ -14,11 +14,11 @@ use serde_json::Value;
 use std::convert::TryFrom;
 
 pub(crate) trait ExtractErrExt {
-    fn extract_error(&self) -> Result<APIError, InvalidErrorCode>;
+    fn extract_error(&self) -> Result<APIError, InvalidErrorCode<'_>>;
 }
 
 impl ExtractErrExt for serde_json::Value {
-    fn extract_error(&self) -> Result<APIError, InvalidErrorCode> {
+    fn extract_error(&self) -> Result<APIError, InvalidErrorCode<'_>> {
         self.get("errors")
             .and_then(|v| v.get(0))
             .ok_or_else(|| InvalidErrorCode::Invalid(Cow::Borrowed(self)))

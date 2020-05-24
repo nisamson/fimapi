@@ -1,6 +1,6 @@
 #![forbid(unsafe_code)]
-#![deny(missing_docs)]
-#![deny(unused_imports)]
+#![warn(rust_2018_idioms)]
+#![deny(unused_imports, missing_docs)]
 
 //! The `fimapi` crate is a Rust wrapper around the [FimFiction](https://fimfiction.net) web API
 

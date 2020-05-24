@@ -20,7 +20,7 @@ pub enum InvalidErrorCode<'value> {
 }
 
 /// 400 errors
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, Copy, Clone)]
 pub enum Malformed {
     /// The body of the request was not valid. It should be valid JSON.
     #[error("The body of the request was not valid")]
@@ -51,7 +51,7 @@ impl TryFrom<u64> for Malformed {
 }
 
 /// 403 errors.
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, Copy, Clone)]
 pub enum Forbidden {
     /// Returned whenever you try to do something the authenticated user is not allowed to do.
     /// For example, trying to edit a story the user does not own will return this error.
@@ -89,7 +89,7 @@ impl TryFrom<u64> for Forbidden {
 }
 
 /// 404 errors.
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, Copy, Clone)]
 pub enum NotFound {
     /// The requested resource was not found.
     /// Will return if the resource you're querying for a collection of does not exist either.
@@ -128,7 +128,7 @@ impl TryFrom<u64> for NotFound {
 }
 
 /// 422 errors.
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, Copy, Clone)]
 pub enum Unprocessable {
     /// A parameter required for the request was not present.
     #[error("A parameter required for the request was not present.")]
@@ -219,7 +219,7 @@ impl TryFrom<u64> for Unprocessable {
 }
 
 /// The type of error received from FimFic.
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, Copy, Clone)]
 pub enum ErrorKind {
     /// 400 errors.
     #[error("{0}")]
@@ -260,11 +260,23 @@ impl TryFrom<u64> for ErrorKind {
 
 /// Represents an error received from FimFic.
 /// Contains the meta data necessary to understand what when wrong.
-#[derive(Debug, thiserror::Error)]
-#[error("Error from API: {kind}")]
+#[derive(Debug, thiserror::Error, Clone)]
+#[error("Error from API: {kind}: {meta}")]
 pub struct APIError {
     kind: ErrorKind,
     meta: serde_json::Value,
+}
+
+impl APIError {
+    /// Retrieves the [ErrorKind] describing how the request failed.
+    pub fn kind(&self) -> ErrorKind {
+        self.kind
+    }
+
+    /// Retrieves the metadata [Value][serde_json::Value] associated with the failure.
+    pub fn meta(&self) -> &serde_json::Value {
+        &self.meta
+    }
 }
 
 impl TryFrom<serde_json::Value> for APIError {
