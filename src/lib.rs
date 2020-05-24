@@ -7,6 +7,9 @@
 use std::str::FromStr;
 
 pub mod client;
+pub mod response;
+pub mod auth;
+pub(crate) mod util;
 
 /// Returns a string representation of the fimapi library version
 pub fn version_str() -> &'static str {
@@ -26,5 +29,4 @@ mod tests {
     fn test_version_parse() {
         assert_eq!(version().to_string(), version_str())
     }
-
 }
