@@ -251,7 +251,7 @@ impl TryFrom<u64> for ErrorKind {
             403 => ErrorKind::Forbidden(Forbidden::try_from(v)?),
             404 => ErrorKind::NotFound(NotFound::try_from(v)?),
             429 => ErrorKind::RateLimited,
-            v if v == 422 || v / 10 == 422 => ErrorKind::Unprocessable(Unprocessable::try_from(v)?),
+            v if v == 422 || v / 10 == 422 => ErrorKind::Unprocessable(Unprocessable::try_from(value)?),
             v => return Err(InvalidErrorCode::BadCode(v))
         };
         Ok(o)

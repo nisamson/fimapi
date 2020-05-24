@@ -10,6 +10,8 @@ pub mod client;
 pub mod response;
 pub mod auth;
 pub(crate) mod util;
+#[cfg(test)]
+pub(crate) mod test;
 
 /// Returns a string representation of the fimapi library version
 pub fn version_str() -> &'static str {
